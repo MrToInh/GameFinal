@@ -93,12 +93,6 @@ class MainMenu(Menu):
                 color=self.cursorASTAR
             )
 
-            self.game.draw_text(
-                'Genetic Algorithm', size=self.option_size,
-                x=self.GAx,  y=self.GAy,
-                color=self.cursorGA
-            )
-
             self.draw_cursor()
             self.change_cursor_color()
             self.blit_menu()
