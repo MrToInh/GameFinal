@@ -5,8 +5,7 @@ from DFS import DFS
 from BFS import BFS
 from A_STAR import A_STAR
 from GA import *
-
-
+from BestFS import BestFirstSearch
 class GameController:
 
     def __init__(self):
@@ -28,24 +27,7 @@ class GameController:
         self.snakes = []
         self.model_loaded = False
 
-    def best_GA_score(self):
-        return self.algo.best_score
-
-    def best_GA_gen(self):
-        return self.algo.best_gen
-
-    def curr_gen(self):
-        return self.algo.generation
-
-    def save_model(self):
-        best_snake = self.algo.best_snake
-        network = best_snake.network
-        best_snake.save_model(network, 'saved_model')
-
-    def load_model(self):
-        self.snake = Snake()
-        self.snake.load_model('saved_model')
-        self.model_loaded = True
+    
 
     def get_score(self):
         if self.snake:
@@ -117,12 +99,18 @@ class GameController:
             self.algo = A_STAR(self.grid)
             self.snake = Snake()
 
+
         elif algo_type == 'GA':
             self.algo = GA(self.grid)
-
             if not self.model_loaded:
                 self.algo.population._initialpopulation_()
                 self.snakes = self.algo.population.snakes
+
+        elif algo_type == 'BestFS':
+            self.algo = BestFirstSearch(self.grid)
+            self.snake = Snake()
+
+        
 
     def ai_play(self, algorithm):
         self.set_algorithm(algorithm)

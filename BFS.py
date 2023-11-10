@@ -44,3 +44,11 @@ class BFS(Algorithm):
                         # return path
                         return self.get_path(neighbor)
         return None
+    def look_ahead(self, snake, node, num_steps):
+        # Simulate the snake's movement for a certain number of steps
+        simulated_snake = snake.clone()  # Assuming you have a method to clone the snake
+        for _ in range(num_steps):
+            simulated_snake.move_to(node.x, node.y)
+            if simulated_snake.ate_fruit() or simulated_snake.ate_body() or simulated_snake.hit_boundary():
+                return False  # Snake encounters obstacle or boundary, no path found
+        return True  # Snake can reach the node in num_steps steps

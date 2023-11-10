@@ -29,6 +29,8 @@ class Algorithm(ABC):
     def run_algorithm(self, snake):
         pass
 
+    #Phương thức này xây dựng và trả về đường đi từ nút đích đến nút ban đầu. 
+    #Đường đi được lưu trong thuộc tính path.
     def get_path(self, node):
         if node.parent == None:
             return node
@@ -38,12 +40,14 @@ class Algorithm(ABC):
             node = node.parent
         return node
 
+    #Phương thức kiểm tra xem một nút có nằm trong cơ thể của con rắn hay không.
     def inside_body(self, snake, node):
         for body in snake.body:
             if body.x == node.x and body.y == node.y:
                 return True
         return False
 
+    #Phương thức này trả về các nút láng giềng của một nút trên lưới.
     def outside_boundary(self, node):
         if not 0 <= node.x < NO_OF_CELLS:
             return True
