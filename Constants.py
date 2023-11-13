@@ -22,11 +22,15 @@ BTN_CLICKED = (94, 219, 111)
 TXT_PASSIVE = (162, 163, 163)
 TXT_ACTIVE = (94, 219, 111)
 
-# 3) snake + path + fruit
+# # 3) snake + path + fruit
 SNAKE_COLOR = (235, 235, 235)
-SNAKE_HEAD_COLOR = (106, 164, 189)
-FRUIT_COLOR = (219, 90, 101)
-PATHCOLOR = (41, 255, 3, 50)
+# SNAKE_HEAD_COLOR = (106, 164, 189)
+# FRUIT_COLOR = (219, 90, 101)
+# PATHCOLOR = (41, 255, 3, 50)
+SNAKE_HEAD_COLOR = (0, 153, 0)   # A shade of green
+FRUIT_COLOR = (255, 0, 102)      # A shade of pink
+PATHCOLOR = (0, 204, 102, 50)   # A semi-transparent shade of green
+
 
 # 4) related to screen
 WINDOW_COLOR = (40, 40, 41)

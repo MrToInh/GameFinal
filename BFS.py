@@ -8,47 +8,50 @@ class BFS(Algorithm):
         super().__init__(grid)
 
     def run_algorithm(self, snake):
-        # start clean
-        self.frontier = deque([])
-        self.explored_set = []
-        self.path = []
-
+        # Khởi tạo trạng thái ban đầu và trạng thái mục tiêu
         initialstate, goalstate = self.get_initstate_and_goalstate(snake)
 
-        # open list
+        # Khởi tạo hàng đợi FIFO (First In First Out)
+        self.frontier = deque([])
+        # Danh sách các trạng thái đã duyệt
+        self.explored_set = []
+        # Danh sách lưu trữ đường đi từ trạng thái ban đầu đến trạng thái hiện tại
+        self.path = []
+
+        # Thêm trạng thái ban đầu vào hàng đợi
         self.frontier.append(initialstate)
 
-        # while we have states in open list
+        # Lặp cho đến khi không còn trạng thái nào trong hàng đợi
         while len(self.frontier) > 0:
-            shallowest_node = self.frontier.popleft()  # FIFO queue
+            # Lấy trạng thái ở đầu hàng đợi (trạng thái có mức sâu thấp nhất)
+            shallowest_node = self.frontier.popleft()
+
+            # Đánh dấu trạng thái này là đã duyệt
             self.explored_set.append(shallowest_node)
 
-            # get neighbors
+            # Lấy danh sách các trạng thái láng giềng
             neighbors = self.get_neighbors(shallowest_node)
 
-            # for each neighbor
+            # Duyệt qua từng trạng thái láng giềng
             for neighbor in neighbors:
-                # check if path inside snake, outside boundary or already visited
-                if self.inside_body(snake, neighbor) or self.outside_boundary(neighbor):
-                    self.explored_set.append(neighbor)
-                    continue  # skip this path
+                # Kiểm tra xem đường đi đi qua cơ thể con rắn, ra khỏi biên, hoặc đã được duyệt chưa
+                if self.inside_body(snake, neighbor) or self.outside_boundary(neighbor) or neighbor in self.explored_set:
+                    continue  # Bỏ qua đường đi này
 
+                # Nếu trạng thái láng giềng chưa được thăm
                 if neighbor not in self.frontier and neighbor not in self.explored_set:
-                    neighbor.parent = shallowest_node  # mark parent
-                    self.explored_set.append(neighbor)  # mark visited
-                    # add to frontier to explore its kids next cycle
+                    # Đánh dấu trạng thái cha
+                    neighbor.parent = shallowest_node
+                    # Đánh dấu trạng thái đã duyệt
+                    self.explored_set.append(neighbor)
+                    # Thêm trạng thái láng giềng vào hàng đợi để kiểm tra các trạng thái con của nó trong vòng lặp tiếp theo
                     self.frontier.append(neighbor)
 
-                    # check if goal state
+                    # Kiểm tra xem trạng thái láng giềng có phải là trạng thái mục tiêu không
                     if neighbor.equal(goalstate):
-                        # return path
+                        # Trả về đường đi từ trạng thái ban đầu đến trạng thái mục tiêu
                         return self.get_path(neighbor)
+
+        # Trường hợp không tìm thấy đường đi
         return None
-    def look_ahead(self, snake, node, num_steps):
-        # Simulate the snake's movement for a certain number of steps
-        simulated_snake = snake.clone()  # Assuming you have a method to clone the snake
-        for _ in range(num_steps):
-            simulated_snake.move_to(node.x, node.y)
-            if simulated_snake.ate_fruit() or simulated_snake.ate_body() or simulated_snake.hit_boundary():
-                return False  # Snake encounters obstacle or boundary, no path found
-        return True  # Snake can reach the node in num_steps steps
+

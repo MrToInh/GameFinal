@@ -32,13 +32,18 @@ class Algorithm(ABC):
     #Phương thức này xây dựng và trả về đường đi từ nút đích đến nút ban đầu. 
     #Đường đi được lưu trong thuộc tính path.
     def get_path(self, node):
-        if node.parent == None:
+        
+        # Nếu trạng thái hiện tại không có trạng thái cha (là trạng thái ban đầu)
+        if node.parent is None:
             return node
 
-        while node.parent.parent != None:
-            self.path.append(node)
-            node = node.parent
+        # Lặp qua các trạng thái cha để xây dựng đường đi
+        while node.parent.parent is not None:
+            self.path.append(node)  # Thêm trạng thái vào đường đi
+            node = node.parent  # Chuyển sang trạng thái cha
+
         return node
+
 
     #Phương thức kiểm tra xem một nút có nằm trong cơ thể của con rắn hay không.
     def inside_body(self, snake, node):
@@ -68,7 +73,7 @@ class Algorithm(ABC):
             neighbors.append(self.grid[i+1][j])
         # top [i, j-1]
         if j > 0:
-            neighbors.append(self.grid[i][j-1])
+            neighbors.append(self.grid[i][j-1])    
 
         # bottom [i, j+1]
         if j < NO_OF_CELLS - 1:

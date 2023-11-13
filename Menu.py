@@ -36,13 +36,13 @@ class MainMenu(Menu):
         self.cursorDFS = WHITE
         self.cursorASTAR = WHITE
         self.cursorGA = WHITE
-        self.cursorBestFS = WHITE
+        self.cursorGreedy = WHITE
 
         self.BFSx, self.BFSy = self.mid_size, self.mid_size - 50
         self.DFSx, self.DFSy = self.mid_size, self.mid_size + 0
         self.ASTARx, self.ASTARy = self.mid_size, self.mid_size + 50
         # self.GAx, self.GAy = self.mid_size, self.mid_size + 100
-        self.BestFSx, self.BestFSy = self.mid_size, self.mid_size + 100
+        self.Greedyx, self.Greedyy = self.mid_size, self.mid_size + 100
 
         self.cursor_rect.midtop = (self.BFSx + self.offset, self.BFSy)
 
@@ -56,15 +56,15 @@ class MainMenu(Menu):
             self.cursorASTAR = MENU_COLOR
         # elif self.state == 'GA':
         #     self.cursorGA = MENU_COLOR
-        elif self.state == 'BestFS':
-            self.cursorBestFS = MENU_COLOR
+        elif self.state == 'Greedy':
+            self.cursorGreedy = MENU_COLOR
 
     def clear_cursor_color(self):
         self.cursorBFS = WHITE
         self.cursorDFS = WHITE
         self.cursorASTAR = WHITE
         # self.cursorGA = WHITE
-        self.cursorBestFS =WHITE
+        self.cursorGreedy =WHITE
 
     def display_menu(self):
         self.run_display = True
@@ -103,9 +103,9 @@ class MainMenu(Menu):
             #     color=self.cursorGA
             # )
             self.game.draw_text(
-                'BestFS', size=self.option_size,
-                x=self.BestFSx,  y=self.BestFSy,
-                color=self.cursorBestFS
+                'Greedy', size=self.option_size,
+                x=self.Greedyx,  y=self.Greedyy,
+                color=self.cursorGreedy
             )
 
 
@@ -137,10 +137,10 @@ class MainMenu(Menu):
 
             elif self.state == 'ASTAR':
                 self.cursor_rect.midtop = (
-                    self.BestFSx + self.offset, self.BestFSy)
-                self.state = 'BestFS'
+                    self.Greedyx + self.offset, self.Greedyy)
+                self.state = 'Greedy'
 
-            elif self.state == 'BestFS':
+            elif self.state == 'Greedy':
                 self.cursor_rect.midtop = (
                     self.BFSx + self.offset, self.BFSy)
                 self.state = 'BFS'
@@ -148,7 +148,7 @@ class MainMenu(Menu):
         if self.game.UPKEY:
             if self.state == 'BFS':
                 self.cursor_rect.midtop = (
-                    self.BestFSx + self.offset, self.BestFSy)
+                    self.Greedyx + self.offset, self.Greedyy)
                 self.state = 'BestFS'
 
             elif self.state == 'DFS':
@@ -161,7 +161,7 @@ class MainMenu(Menu):
                     self.DFSx + self.offset, self.DFSy)
                 self.state = 'DFS'
 
-            elif self.state == 'BestFS':
+            elif self.state == 'Greedy':
                 self.cursor_rect.midtop = (
                     self.ASTARx + self.offset, self.ASTARy)
                 self.state = 'ASTAR'

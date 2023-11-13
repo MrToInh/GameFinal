@@ -22,8 +22,7 @@ class DFS(Algorithm):
         for neighbor in neighbors:
             if not self.inside_body(snake, neighbor) and not self.outside_boundary(neighbor) and neighbor not in self.explored_set:
                 neighbor.parent = currentstate  # mark parent node
-                path = self.recursive_DFS(
-                    snake, goalstate, neighbor)  # check neighbor
+                path = self.recursive_DFS(snake, goalstate, neighbor)  # check neighbor
                 if path != None:
                     return path  # found path
         return None
@@ -51,32 +50,3 @@ class DFS(Algorithm):
         # return path
         return self.recursive_DFS(snake, goalstate, initialstate)
         
-    def estimate_safety(self, snake, currentstate, goalstate):
-        # Đánh giá khoảng cách đến thức ăn
-        distance_to_fruit = self.calculate_distance(currentstate, snake.get_fruit())
-
-        # Đánh giá khoảng cách đến cơ thể rắn
-        min_distance_to_body = min(
-            self.calculate_distance(currentstate, body) for body in snake.body[1:]
-        )
-
-        # Đánh giá khoảng cách đến biên màn hình
-        distance_to_border = min(
-            currentstate.x,
-            currentstate.y,
-            NO_OF_CELLS - 1 - currentstate.x,
-            NO_OF_CELLS - 1 - currentstate.y,
-        )
-
-        # Tính điểm an toàn tổng thể
-        safety_score = (
-            some_weight * distance_to_fruit
-            + another_weight * min_distance_to_body
-            + yet_another_weight * distance_to_border
-        )
-
-        # trả về điểm an toàn
-        return safety_score
-
-    def calculate_distance(self, point1, point2):
-        return abs(point1.x - point2.x) + abs(point1.y - point2.y)

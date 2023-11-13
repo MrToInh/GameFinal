@@ -5,7 +5,7 @@ from DFS import DFS
 from BFS import BFS
 from A_STAR import A_STAR
 from GA import *
-from BestFS import BestFirstSearch
+from Greedy import Greedy
 class GameController:
 
     def __init__(self):
@@ -100,14 +100,8 @@ class GameController:
             self.snake = Snake()
 
 
-        elif algo_type == 'GA':
-            self.algo = GA(self.grid)
-            if not self.model_loaded:
-                self.algo.population._initialpopulation_()
-                self.snakes = self.algo.population.snakes
-
-        elif algo_type == 'BestFS':
-            self.algo = BestFirstSearch(self.grid)
+        elif algo_type == 'Greedy':
+            self.algo = Greedy(self.grid)
             self.snake = Snake()
 
         
