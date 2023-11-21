@@ -209,7 +209,15 @@ class MainMenu(Menu):
                     self.UCSx + self.offset, self.UCSy)
                 self.state = 'UCS'
 
+            elif self.state == 'BestFS':
+                self.cursor_rect.midtop = (
+                    self.Greedyx + self.offset, self.Greedyy)
+                self.state = 'Greedy'
 
+            elif self.state == 'Halminton':
+                self.cursor_rect.midtop = (
+                    self.BestFSx + self.offset, self.BestFSy)
+                self.state = 'BestFS'
 
 
 

@@ -11,6 +11,7 @@ class Algorithm(ABC):
         self.frontier = []
         self.explored_set = []
         self.path = []
+        self.explored_nodes_reverse = []
 
     def get_initstate_and_goalstate(self, snake):
         return Node(snake.get_x(), snake.get_y()), Node(snake.get_fruit().x, snake.get_fruit().y)

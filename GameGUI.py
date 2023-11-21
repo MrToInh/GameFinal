@@ -33,38 +33,8 @@ class GameGUI:
         self.GA = GAMenu(self, self.controller)
         self.curr_menu = self.main_menu
 
-        
-
         self.load_model = False
         self.view_path = False
-        self.view_explored = False
-        self.color1 = (205, 233, 144)  # Forest Green
-        self.color2 = (170, 203, 115)  # Lawn Green
-
-
-        # Define the height of the color strips
-        self.cell_height = 40
-        self.cell_width= 40
-        # Create the pattern
-        self.pattern = self.create_interlaced_pattern(self.color1, self.color2, self.cell_height, self.cell_width)
-    def create_interlaced_pattern(self, color1, color2, cell_height, cell_width):
-        # Create a surface for the pattern
-        pattern_surface = pygame.Surface((cell_width * 2, cell_height * 2))
-
-        # Fill the surface with the two colors
-        pattern_surface.fill(color1, (0, 0, cell_width, cell_height))
-        pattern_surface.fill(color2, (cell_width, 0, cell_width, cell_height))
-        pattern_surface.fill(color2, (0, cell_height, cell_width, cell_height))
-        pattern_surface.fill(color1, (cell_width, cell_height, cell_width, cell_height))
-
-        # Create the pattern
-        pattern = pygame.Surface((self.SIZE, self.SIZE))
-
-        for i in range(0, self.SIZE, cell_height * 2):
-            for j in range(0, self.SIZE, cell_width * 2):
-                pattern.blit(pattern_surface, (j, i))
-
-        return pattern
 
     def game_loop(self):
         while self.playing:
@@ -73,7 +43,7 @@ class GameGUI:
             if self.BACK:
                 self.playing = False
 
-            self.display.blit(self.pattern, (0, 0))
+            self.display.fill(WINDOW_COLOR)
             if self.controller.algo != None:
                 self.draw_elements()
             self.window.blit(self.display, (0, 0))
@@ -84,6 +54,7 @@ class GameGUI:
 
     def draw_elements(self):
         # draw banner and stats
+        self.draw_grid()
         self.draw_banner()
         self.draw_game_stats()
 
@@ -96,12 +67,34 @@ class GameGUI:
             self.draw_score()
 
             if not self.controller.model_loaded:
-                self.draw_path()  # only path Ai has a 
-
-            self.draw_explored()
+                self.draw_path()  # only path Ai has a path
 
         else:  # training a GA model
             self.draw_all_snakes_GA()
+
+    # def draw_grid(self):
+    #     for x in range(0, self.SIZE, CELL_SIZE):
+    #         pygame.draw.line(self.display,  (205, 233, 144), (x, 0), (x, self.SIZE))
+    #     for y in range(0, self.SIZE, CELL_SIZE):
+    #         pygame.draw.line(self.display, (170, 203, 115), (0, y), (self.SIZE, y))
+
+    # Modify the draw_grid method
+    def draw_grid(self):
+        color1 = (205, 233, 144)
+        color2 = (170, 203, 115)
+        
+        for x in range(0, self.SIZE, CELL_SIZE):
+            if x // CELL_SIZE % 2 == 0:
+                pygame.draw.line(self.display, color1, (x, 0), (x, self.SIZE))
+            else:
+                pygame.draw.line(self.display, color2, (x, 0), (x, self.SIZE))
+        
+        for y in range(0, self.SIZE, CELL_SIZE):
+            if y // CELL_SIZE % 2 == 0:
+                pygame.draw.line(self.display, color1, (0, y), (self.SIZE, y))
+            else:
+                pygame.draw.line(self.display, color2, (0, y), (self.SIZE, y))
+
 
     def draw_game_stats(self):
         if self.curr_menu.state != 'GA':  # path Ai algo
@@ -166,20 +159,6 @@ class GameGUI:
 
                 shape_surf = pygame.Surface(path_rect.size, pygame.SRCALPHA)
                 pygame.draw.rect(shape_surf, PATHCOLOR, shape_surf.get_rect())
-
-                pygame.draw.rect(self.display, BANNER_COLOR, path_rect, 1)
-                self.display.blit(shape_surf, path_rect)
-
-    def draw_explored(self):
-        if self.controller.algo != None and self.view_explored:
-            for path in self.controller.algo.explored_set:  # for each {x,y} in path
-                x = int(path.x * CELL_SIZE)
-                y = int(path.y * CELL_SIZE)
-
-                path_rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
-
-                shape_surf = pygame.Surface(path_rect.size, pygame.SRCALPHA)
-                pygame.draw.rect(shape_surf,EXPLOREDCOLOR , shape_surf.get_rect())
 
                 pygame.draw.rect(self.display, BANNER_COLOR, path_rect, 1)
                 self.display.blit(shape_surf, path_rect)
@@ -316,9 +295,6 @@ class GameGUI:
                 elif event.key == pygame.K_q:  # on q return
                     self.BACK = True
                     self.controller.reset()
-
-                elif event.key == pygame.K_s:  # on q return
-                    self.view_explored = not self.view_explored
 
                 elif event.key == pygame.K_SPACE:  # space view path or hide training snakes
                     self.view_path = not self.view_path
