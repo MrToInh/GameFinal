@@ -3,9 +3,11 @@ from Constants import NO_OF_CELLS, BANNER_HEIGHT
 from Utility import Grid
 from DFS import DFS
 from BFS import BFS
+from UCS import UCS
 from A_STAR import A_STAR
 from GA import *
 from Greedy import Greedy
+from BestFS import BestFirstSearch
 class GameController:
 
     def __init__(self):
@@ -102,6 +104,14 @@ class GameController:
 
         elif algo_type == 'Greedy':
             self.algo = Greedy(self.grid)
+            self.snake = Snake()
+
+        elif algo_type == 'UCS':
+            self.algo = UCS(self.grid)
+            self.snake = Snake()
+
+        elif algo_type == 'BestFS':
+            self.algo = BestFirstSearch(self.grid)
             self.snake = Snake()
 
         

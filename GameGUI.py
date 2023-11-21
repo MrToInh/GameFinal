@@ -35,6 +35,7 @@ class GameGUI:
 
         self.load_model = False
         self.view_path = False
+        self.view_explored = False
 
     def game_loop(self):
         while self.playing:
@@ -69,31 +70,29 @@ class GameGUI:
             if not self.controller.model_loaded:
                 self.draw_path()  # only path Ai has a path
 
+            self.draw_explored()
+
         else:  # training a GA model
             self.draw_all_snakes_GA()
 
-    # def draw_grid(self):
-    #     for x in range(0, self.SIZE, CELL_SIZE):
-    #         pygame.draw.line(self.display,  (205, 233, 144), (x, 0), (x, self.SIZE))
-    #     for y in range(0, self.SIZE, CELL_SIZE):
-    #         pygame.draw.line(self.display, (170, 203, 115), (0, y), (self.SIZE, y))
-
     # Modify the draw_grid method
     def draw_grid(self):
-        color1 = (205, 233, 144)
-        color2 = (170, 203, 115)
-        
+        color1 = (170, 203, 115)  
+        color2 = (205, 233, 144)  # Lime green
+
         for x in range(0, self.SIZE, CELL_SIZE):
-            if x // CELL_SIZE % 2 == 0:
-                pygame.draw.line(self.display, color1, (x, 0), (x, self.SIZE))
-            else:
-                pygame.draw.line(self.display, color2, (x, 0), (x, self.SIZE))
-        
-        for y in range(0, self.SIZE, CELL_SIZE):
-            if y // CELL_SIZE % 2 == 0:
-                pygame.draw.line(self.display, color1, (0, y), (self.SIZE, y))
-            else:
-                pygame.draw.line(self.display, color2, (0, y), (self.SIZE, y))
+            for y in range(0, self.SIZE, CELL_SIZE):
+                # Determine the color based on the position
+                current_color = color1 if (x // CELL_SIZE + y // CELL_SIZE) % 2 == 0 else color2
+
+                pygame.draw.rect(self.display, current_color, (x, y, CELL_SIZE, CELL_SIZE))
+
+        # # Additional grid lines (optional)
+        # for x in range(0, self.SIZE, CELL_SIZE):
+        #     pygame.draw.line(self.display, (0, 0, 0), (x, 0), (x, self.SIZE))
+        # for y in range(0, self.SIZE, CELL_SIZE):
+        #     pygame.draw.line(self.display, (0, 0, 0), (0, y), (self.SIZE, y))
+
 
 
     def draw_game_stats(self):
@@ -162,6 +161,17 @@ class GameGUI:
 
                 pygame.draw.rect(self.display, BANNER_COLOR, path_rect, 1)
                 self.display.blit(shape_surf, path_rect)
+
+
+    # Add this method to your GameGUI class
+    def draw_explored(self):
+        if self.view_explored and self.controller.algo is not None:
+            for node in self.controller.algo.explored_set:
+                x = int(node.x * CELL_SIZE)
+                y = int(node.y * CELL_SIZE)
+
+                explored_rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
+                pygame.draw.rect(self.display, EXPLORED_COLOR, explored_rect, 1)
 
     def draw_snake_head(self, snake):
         head = snake.body[0]
@@ -298,7 +308,8 @@ class GameGUI:
 
                 elif event.key == pygame.K_SPACE:  # space view path or hide training snakes
                     self.view_path = not self.view_path
-
+                elif event.key == pygame.K_s:  # space view path or hide training snakes
+                    self.view_explored = not self.view_explored
                 elif event.key == pygame.K_DOWN:
                     self.DOWNKEY = True
                 elif event.key == pygame.K_UP:

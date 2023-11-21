@@ -1,5 +1,4 @@
 from Algorithm import Algorithm
-from collections import deque
 
 class Greedy(Algorithm):
     def __init__(self, grid):
@@ -7,34 +6,44 @@ class Greedy(Algorithm):
 
     def run_algorithm(self, snake):
         # clear everything
-        self.frontier = deque([])
+        self.frontier = []
+        self.explored_set = []
         self.path = []
 
-        initialstate, goalstate = self.get_initstate_and_goalstate(snake)
+        initial_state, goal_state = self.get_initstate_and_goalstate(snake)
 
-        # open list
-        self.frontier.append(initialstate)
+        # open list using a regular list
+        self.frontier.append(initial_state)
 
-        # while we have states in open list
-        while len(self.frontier) > 0:
-            # get the state with the minimum heuristic value (greedy choice)
-            current_state = min(self.frontier, key=lambda x: self.manhattan_distance(x, goalstate))
+        # while we have states in the open list
+        while self.frontier:
+            # get node with the lowest h(n)
+            self.frontier.sort(key=lambda node: node.h)
+            current_node = self.frontier.pop(0)
 
             # check if it's the goal state
-            if current_state.equal(goalstate):
-                return self.get_path(current_state)
+            if current_node.equal(goal_state):
+                return self.get_path(current_node)
 
-            self.frontier.remove(current_state)  # mark visited
+            self.explored_set.append(current_node)  # mark visited
 
-            neighbors = self.get_neighbors(current_state)  # get neighbors
+            neighbors = self.get_neighbors(current_node)  # get neighbors
 
             # for each neighbor
             for neighbor in neighbors:
-                # check if path inside snake, outside boundary, or already visited
-                if self.inside_body(snake, neighbor) or self.outside_boundary(neighbor) or neighbor in self.frontier:
+                # check if the path is inside the snake, outside the boundary, or already visited
+                if (
+                    self.inside_body(snake, neighbor)
+                    or self.outside_boundary(neighbor)
+                    or neighbor in self.explored_set
+                ):
                     continue  # skip this path
 
-                neighbor.h = self.manhattan_distance(goalstate, neighbor)
+                # calculate heuristic value h(n)
+                neighbor.h = self.manhattan_distance(goal_state, neighbor)
+
+                # add neighbor to the priority queue
                 self.frontier.append(neighbor)
+                neighbor.parent = current_node
 
         return None

@@ -11,7 +11,6 @@ class Algorithm(ABC):
         self.frontier = []
         self.explored_set = []
         self.path = []
-        self.explored_nodes_reverse = []
 
     def get_initstate_and_goalstate(self, snake):
         return Node(snake.get_x(), snake.get_y()), Node(snake.get_fruit().x, snake.get_fruit().y)
@@ -30,30 +29,21 @@ class Algorithm(ABC):
     def run_algorithm(self, snake):
         pass
 
-    #Phương thức này xây dựng và trả về đường đi từ nút đích đến nút ban đầu. 
-    #Đường đi được lưu trong thuộc tính path.
     def get_path(self, node):
-        
-        # Nếu trạng thái hiện tại không có trạng thái cha (là trạng thái ban đầu)
-        if node.parent is None:
+        if node.parent == None:
             return node
 
-        # Lặp qua các trạng thái cha để xây dựng đường đi
-        while node.parent.parent is not None:
-            self.path.append(node)  # Thêm trạng thái vào đường đi
-            node = node.parent  # Chuyển sang trạng thái cha
-
+        while node.parent.parent != None:
+            self.path.append(node)
+            node = node.parent
         return node
 
-
-    #Phương thức kiểm tra xem một nút có nằm trong cơ thể của con rắn hay không.
     def inside_body(self, snake, node):
         for body in snake.body:
             if body.x == node.x and body.y == node.y:
                 return True
         return False
 
-    #Phương thức này trả về các nút láng giềng của một nút trên lưới.
     def outside_boundary(self, node):
         if not 0 <= node.x < NO_OF_CELLS:
             return True
@@ -74,7 +64,7 @@ class Algorithm(ABC):
             neighbors.append(self.grid[i+1][j])
         # top [i, j-1]
         if j > 0:
-            neighbors.append(self.grid[i][j-1])    
+            neighbors.append(self.grid[i][j-1])
 
         # bottom [i, j+1]
         if j < NO_OF_CELLS - 1:
