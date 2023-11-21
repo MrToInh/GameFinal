@@ -30,6 +30,7 @@ SNAKE_COLOR = (235, 235, 235)
 SNAKE_HEAD_COLOR = (0, 153, 0)   # A shade of green
 FRUIT_COLOR = (255, 0, 102)      # A shade of pink
 PATHCOLOR = (0, 204, 102, 50)   # A semi-transparent shade of green
+EXPLOREDCOLOR = (0, 204, 102)   # A semi-transparent shade of green
 
 
 # 4) related to screen

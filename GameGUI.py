@@ -32,10 +32,12 @@ class GameGUI:
         self.main_menu = MainMenu(self)
         self.GA = GAMenu(self, self.controller)
         self.curr_menu = self.main_menu
+
         
 
         self.load_model = False
         self.view_path = False
+        self.view_explored = False
         self.color1 = (205, 233, 144)  # Forest Green
         self.color2 = (170, 203, 115)  # Lawn Green
 
@@ -94,7 +96,9 @@ class GameGUI:
             self.draw_score()
 
             if not self.controller.model_loaded:
-                self.draw_path()  # only path Ai has a path
+                self.draw_path()  # only path Ai has a 
+
+            self.draw_explored()
 
         else:  # training a GA model
             self.draw_all_snakes_GA()
@@ -162,6 +166,20 @@ class GameGUI:
 
                 shape_surf = pygame.Surface(path_rect.size, pygame.SRCALPHA)
                 pygame.draw.rect(shape_surf, PATHCOLOR, shape_surf.get_rect())
+
+                pygame.draw.rect(self.display, BANNER_COLOR, path_rect, 1)
+                self.display.blit(shape_surf, path_rect)
+
+    def draw_explored(self):
+        if self.controller.algo != None and self.view_explored:
+            for path in self.controller.algo.explored_set:  # for each {x,y} in path
+                x = int(path.x * CELL_SIZE)
+                y = int(path.y * CELL_SIZE)
+
+                path_rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
+
+                shape_surf = pygame.Surface(path_rect.size, pygame.SRCALPHA)
+                pygame.draw.rect(shape_surf,EXPLOREDCOLOR , shape_surf.get_rect())
 
                 pygame.draw.rect(self.display, BANNER_COLOR, path_rect, 1)
                 self.display.blit(shape_surf, path_rect)
@@ -298,6 +316,10 @@ class GameGUI:
                 elif event.key == pygame.K_q:  # on q return
                     self.BACK = True
                     self.controller.reset()
+
+                elif event.key == pygame.K_s:  # on q return
+                    self.view_explored = not self.view_explored
+
 
                 elif event.key == pygame.K_SPACE:  # space view path or hide training snakes
                     self.view_path = not self.view_path
