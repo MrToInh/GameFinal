@@ -35,14 +35,18 @@ class MainMenu(Menu):
         self.cursorBFS = MENU_COLOR
         self.cursorDFS = WHITE
         self.cursorASTAR = WHITE
-        self.cursorGA = WHITE
+        self.cursorUCS = WHITE
         self.cursorGreedy = WHITE
+        self.cursorBestFS = WHITE
+        self.cursorHal = WHITE
 
         self.BFSx, self.BFSy = self.mid_size, self.mid_size - 50
         self.DFSx, self.DFSy = self.mid_size, self.mid_size + 0
         self.ASTARx, self.ASTARy = self.mid_size, self.mid_size + 50
-        # self.GAx, self.GAy = self.mid_size, self.mid_size + 100
-        self.Greedyx, self.Greedyy = self.mid_size, self.mid_size + 100
+        self.UCSx, self.UCSy = self.mid_size, self.mid_size + 100
+        self.Greedyx, self.Greedyy = self.mid_size, self.mid_size + 150
+        self.BestFSx, self.BestFSy = self.mid_size, self.mid_size + 200
+        self.Halx, self.Haly = self.mid_size, self.mid_size + 250
 
         self.cursor_rect.midtop = (self.BFSx + self.offset, self.BFSy)
 
@@ -54,17 +58,24 @@ class MainMenu(Menu):
             self.cursorDFS = MENU_COLOR
         elif self.state == 'ASTAR':
             self.cursorASTAR = MENU_COLOR
-        # elif self.state == 'GA':
-        #     self.cursorGA = MENU_COLOR
+        elif self.state == 'UCS':
+            self.cursorUCS = MENU_COLOR
         elif self.state == 'Greedy':
             self.cursorGreedy = MENU_COLOR
+        elif self.state == 'BestFS':
+            self.cursorBestFS = MENU_COLOR
+        elif self.state == 'Halminton':
+            self.cursorHal = MENU_COLOR
 
     def clear_cursor_color(self):
         self.cursorBFS = WHITE
         self.cursorDFS = WHITE
         self.cursorASTAR = WHITE
-        # self.cursorGA = WHITE
+        self.cursorUCS = WHITE
         self.cursorGreedy =WHITE
+        self.cursorBestFS =WHITE
+        self.cursorHal =WHITE
+
 
     def display_menu(self):
         self.run_display = True
@@ -97,15 +108,26 @@ class MainMenu(Menu):
                 x=self.ASTARx,  y=self.ASTARy,
                 color=self.cursorASTAR
             )
-            # self.game.draw_text(
-            #     'GA', size=self.option_size,
-            #     x=self.GAx,  y=self.GAy,
-            #     color=self.cursorGA
-            # )
+            self.game.draw_text(
+                'UCS', size=self.option_size,
+                x=self.UCSx,  y=self.UCSy,
+                color=self.cursorUCS
+            )
             self.game.draw_text(
                 'Greedy', size=self.option_size,
                 x=self.Greedyx,  y=self.Greedyy,
                 color=self.cursorGreedy
+            )
+            self.game.draw_text(
+                'BestFS', size=self.option_size,
+                x=self.BestFSx,  y=self.BestFSy,
+                color=self.cursorBestFS
+            )
+
+            self.game.draw_text(
+                'Halminton', size=self.option_size,
+                x=self.Halx,  y=self.Haly,
+                color=self.cursorHal
             )
 
 
@@ -137,19 +159,35 @@ class MainMenu(Menu):
 
             elif self.state == 'ASTAR':
                 self.cursor_rect.midtop = (
+                    self.UCSx + self.offset, self.UCSy)
+                self.state = 'UCS'
+
+            elif self.state == 'UCS':
+                self.cursor_rect.midtop = (
                     self.Greedyx + self.offset, self.Greedyy)
                 self.state = 'Greedy'
 
             elif self.state == 'Greedy':
                 self.cursor_rect.midtop = (
+                    self.BestFSx + self.offset, self.BestFSy)
+                self.state = 'BestFS'
+
+            elif self.state == 'BestFS':
+                self.cursor_rect.midtop = (
+                    self.Halx + self.offset, self.Haly)
+                self.state = 'Halminton'
+            
+            elif self.state == 'Halminton':
+                self.cursor_rect.midtop = (
                     self.BFSx + self.offset, self.BFSy)
                 self.state = 'BFS'
+            
 
         if self.game.UPKEY:
             if self.state == 'BFS':
                 self.cursor_rect.midtop = (
-                    self.Greedyx + self.offset, self.Greedyy)
-                self.state = 'BestFS'
+                    self.Halx + self.offset, self.Haly)
+                self.state = 'Halminton'
 
             elif self.state == 'DFS':
                 self.cursor_rect.midtop = (
@@ -161,10 +199,18 @@ class MainMenu(Menu):
                     self.DFSx + self.offset, self.DFSy)
                 self.state = 'DFS'
 
-            elif self.state == 'Greedy':
+            elif self.state == 'UCS':
                 self.cursor_rect.midtop = (
                     self.ASTARx + self.offset, self.ASTARy)
                 self.state = 'ASTAR'
+
+            elif self.state == 'Greedy':
+                self.cursor_rect.midtop = (
+                    self.UCSx + self.offset, self.UCSy)
+                self.state = 'UCS'
+
+
+
 
 
 class button():

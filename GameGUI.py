@@ -320,7 +320,6 @@ class GameGUI:
                 elif event.key == pygame.K_s:  # on q return
                     self.view_explored = not self.view_explored
 
-
                 elif event.key == pygame.K_SPACE:  # space view path or hide training snakes
                     self.view_path = not self.view_path
 
