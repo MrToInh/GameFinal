@@ -36,6 +36,33 @@ class GameGUI:
 
         self.load_model = False
         self.view_path = False
+        self.color1 = (205, 233, 144)  # Forest Green
+        self.color2 = (170, 203, 115)  # Lawn Green
+
+
+        # Define the height of the color strips
+        self.cell_height = 40
+        self.cell_width= 40
+        # Create the pattern
+        self.pattern = self.create_interlaced_pattern(self.color1, self.color2, self.cell_height, self.cell_width)
+    def create_interlaced_pattern(self, color1, color2, cell_height, cell_width):
+        # Create a surface for the pattern
+        pattern_surface = pygame.Surface((cell_width * 2, cell_height * 2))
+
+        # Fill the surface with the two colors
+        pattern_surface.fill(color1, (0, 0, cell_width, cell_height))
+        pattern_surface.fill(color2, (cell_width, 0, cell_width, cell_height))
+        pattern_surface.fill(color2, (0, cell_height, cell_width, cell_height))
+        pattern_surface.fill(color1, (cell_width, cell_height, cell_width, cell_height))
+
+        # Create the pattern
+        pattern = pygame.Surface((self.SIZE, self.SIZE))
+
+        for i in range(0, self.SIZE, cell_height * 2):
+            for j in range(0, self.SIZE, cell_width * 2):
+                pattern.blit(pattern_surface, (j, i))
+
+        return pattern
 
     def game_loop(self):
         while self.playing:
@@ -44,7 +71,7 @@ class GameGUI:
             if self.BACK:
                 self.playing = False
 
-            self.display.fill(WINDOW_COLOR)
+            self.display.blit(self.pattern, (0, 0))
             if self.controller.algo != None:
                 self.draw_elements()
             self.window.blit(self.display, (0, 0))
