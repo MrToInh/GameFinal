@@ -1,6 +1,5 @@
 import pygame
 from Constants import *
-from GA import *
 import sys
 
 
@@ -46,7 +45,6 @@ class MainMenu(Menu):
         self.UCSx, self.UCSy = self.mid_size, self.mid_size + 100
         self.Greedyx, self.Greedyy = self.mid_size, self.mid_size + 150
         self.BestFSx, self.BestFSy = self.mid_size, self.mid_size + 200
-        self.Halx, self.Haly = self.mid_size, self.mid_size + 250
 
         self.cursor_rect.midtop = (self.BFSx + self.offset, self.BFSy)
 
@@ -64,8 +62,7 @@ class MainMenu(Menu):
             self.cursorGreedy = MENU_COLOR
         elif self.state == 'BestFS':
             self.cursorBestFS = MENU_COLOR
-        elif self.state == 'Halminton':
-            self.cursorHal = MENU_COLOR
+
 
     def clear_cursor_color(self):
         self.cursorBFS = WHITE
@@ -74,17 +71,18 @@ class MainMenu(Menu):
         self.cursorUCS = WHITE
         self.cursorGreedy =WHITE
         self.cursorBestFS =WHITE
-        self.cursorHal =WHITE
 
 
     def display_menu(self):
         self.run_display = True
 
+        bg_image = pygame.image.load('images/wp3906251.jpg')
+
         while self.run_display:
             self.game.event_handler()
             self.check_input()
 
-            self.game.display.fill(WINDOW_COLOR)
+            self.game.display.blit(bg_image, (0, 0))
 
             self.game.draw_text(
                 'Ai Snake Game', size=self.title_size,
@@ -123,13 +121,6 @@ class MainMenu(Menu):
                 x=self.BestFSx,  y=self.BestFSy,
                 color=self.cursorBestFS
             )
-
-            self.game.draw_text(
-                'Halminton', size=self.option_size,
-                x=self.Halx,  y=self.Haly,
-                color=self.cursorHal
-            )
-
 
             self.draw_cursor()
             self.change_cursor_color()
@@ -174,11 +165,6 @@ class MainMenu(Menu):
 
             elif self.state == 'BestFS':
                 self.cursor_rect.midtop = (
-                    self.Halx + self.offset, self.Haly)
-                self.state = 'Halminton'
-            
-            elif self.state == 'Halminton':
-                self.cursor_rect.midtop = (
                     self.BFSx + self.offset, self.BFSy)
                 self.state = 'BFS'
             
@@ -186,8 +172,8 @@ class MainMenu(Menu):
         if self.game.UPKEY:
             if self.state == 'BFS':
                 self.cursor_rect.midtop = (
-                    self.Halx + self.offset, self.Haly)
-                self.state = 'Halminton'
+                    self.BestFSx + self.offset, self.BestFSy)
+                self.state = 'BestFS'
 
             elif self.state == 'DFS':
                 self.cursor_rect.midtop = (
@@ -214,7 +200,7 @@ class MainMenu(Menu):
                     self.Greedyx + self.offset, self.Greedyy)
                 self.state = 'Greedy'
 
-            elif self.state == 'Halminton':
+            elif self.state == 'BFS':
                 self.cursor_rect.midtop = (
                     self.BestFSx + self.offset, self.BestFSy)
                 self.state = 'BestFS'
@@ -296,10 +282,6 @@ class GAMenu(Menu):
         Menu.__init__(self, game)
 
         self.controller = controller
-        self.train_model = button(
-            game.SIZE/2 - 4*(CELL_SIZE + NO_OF_CELLS), game.SIZE/2 + 3.5*(CELL_SIZE + NO_OF_CELLS), 'Train Model', game)
-        self.load_model = button(
-            game.SIZE/2 + (CELL_SIZE), game.SIZE/2 + 3.5*(CELL_SIZE + NO_OF_CELLS), 'Load Model', game)
 
         self.no_population = TextBox(
             self.game.SIZE/2 + 50, self.game.SIZE/2 - 60, game)

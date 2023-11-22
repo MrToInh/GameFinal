@@ -42,7 +42,7 @@ class BFS(Algorithm):
                     continue  # Bỏ qua đường đi này
 
                 # Nếu trạng thái láng giềng chưa được thăm
-                if neighbor not in self.frontier and neighbor not in self.explored_set:
+                if neighbor not in self.frontier and neighbor not in self.explored_set :
                     # Đánh dấu trạng thái cha
                     neighbor.parent = shallowest_node
                     # Đánh dấu trạng thái đã duyệt

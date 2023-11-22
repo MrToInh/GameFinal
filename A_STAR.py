@@ -11,53 +11,45 @@ class A_STAR(Algorithm):
         self.explored_set = []
         self.path = []
 
-        initial_state, goal_state = self.get_initstate_and_goalstate(snake)
+        initialstate, goalstate = self.get_initstate_and_goalstate(snake)
 
-        # open list using a regular list
-        self.frontier.append(initial_state)
+        # open list
+        self.frontier.append(initialstate)
 
-        # while we have states in the open list
-        while self.frontier:
-            # get node with the lowest f(n)
-            current_node = min(self.frontier, key=lambda node: node.f)
+        # while we have states in open list
+        while len(self.frontier) > 0:
+            # get node with lowest cost f(n) = g(n) + h(n)
+            lowest_index = 0
+            for i in range(len(self.frontier)):
+                if self.frontier[i].g + self.manhattan_distance(self.frontier[i], goalstate) < self.frontier[lowest_index].g + self.manhattan_distance(self.frontier[lowest_index], goalstate):
+                    lowest_index = i
 
-            # check if it's the goal state
-            if current_node.equal(goal_state):
-                return self.get_path(current_node)
+            lowest_node = self.frontier.pop(lowest_index)
 
-            self.explored_set.append(current_node)  # mark visited
-            self.frontier.remove(current_node)
+            # check if its goal state
+            if lowest_node.equal(goalstate):
+                return self.get_path(lowest_node)
 
-            neighbors = self.get_neighbors(current_node)  # get neighbors
+            self.explored_set.append(lowest_node)  # mark visited
+            neighbors = self.get_neighbors(lowest_node)  # get neighbors
 
             # for each neighbor
             for neighbor in neighbors:
-                # check if the path is inside the snake, outside the boundary, or already visited
-                if (
-                    self.inside_body(snake, neighbor)
-                    or self.outside_boundary(neighbor)
-                    or neighbor in self.explored_set
-                ):
+                # check if path inside snake, outside boundary, or already visited
+                if self.inside_body(snake, neighbor) or self.outside_boundary(neighbor) or neighbor in self.explored_set:
                     continue  # skip this path
 
-                g = current_node.g + 1
-                h = self.manhattan_distance(goal_state, neighbor)
-
-                # calculate total cost f(n) = g(n) + h(n)
-                f = g + h
-
+                g = lowest_node.g + 1
                 best = False  # assuming neighbor path is better
 
-                if neighbor not in self.frontier:
+                if neighbor not in self.frontier:  # first time visiting
                     self.frontier.append(neighbor)
                     best = True
-                elif f < neighbor.f:
+                elif g < neighbor.g:  # has already been visited but has a worse g, now it's better
                     best = True
 
                 if best:
-                    neighbor.parent = current_node
+                    neighbor.parent = lowest_node
                     neighbor.g = g
-                    neighbor.h = h
-                    neighbor.f = f
 
-        return None
+    

@@ -2,6 +2,7 @@ import pygame
 from Constants import *
 from Menu import *
 from GameController import GameController
+from GA import *
 import sys
 import tkinter as tk
 
@@ -12,8 +13,8 @@ class GameGUI:
         self.clock = pygame.time.Clock()
         self.SCREEN_UPDATE = pygame.USEREVENT
 
-        self.speed = 90
-        self.speed_up = 100
+        self.speed = 60
+        self.speed_up = 70
 
         pygame.time.set_timer(self.SCREEN_UPDATE, self.speed)
 
@@ -57,7 +58,6 @@ class GameGUI:
         self.draw_grid()
         self.draw_banner()
         self.draw_game_stats()
-        self.draw_banner_text()
 
         if self.curr_menu.state != 'GA' or self.controller.model_loaded:  # Path Ai or trained GA
             fruit = self.controller.get_fruit_pos()
@@ -76,6 +76,22 @@ class GameGUI:
         else:  # training a GA model
             self.draw_all_snakes_GA()
 
+ 
+
+    # def draw_button(self, text, x, y, width, height, action=None):
+    #     mouse = pygame.mouse.get_pos()
+    #     click = pygame.mouse.get_pressed()
+
+    #     if x + width > mouse[0] > x and y + height > mouse[1] > y:
+    #         pygame.draw.rect(self.display, BTN_COLOR, (x, y, width, height))
+
+    #         if click[0] == 1 and action is not None:
+    #             if action == "show_form":
+    #                 self.show_instruction_form()
+    #     else:
+    #         pygame.draw.rect(self.display, BTN_COLOR, (x, y, width, height))
+
+    #     self.draw_text(text, 20, x + width / 2, y + height / 2, color=WINDOW_COLOR)
 
 
     # Modify the draw_grid method
@@ -91,8 +107,35 @@ class GameGUI:
                 pygame.draw.rect(self.display, current_color, (x, y, CELL_SIZE, CELL_SIZE))
 
     def draw_game_stats(self):
-        if self.curr_menu.state != '':  # path Ai algo
+        if self.curr_menu.state != 'GA':  # path Ai algo
             instruction = 'Space to view Ai path, W to stop, S to simulate,  Q to go back'
+
+        elif self.controller.model_loaded:  # trained model
+            instruction = 'W to speed up, Q to go back'
+
+        else:  # training model GA algo
+            instruction = 'Space to hide all snakes, W to stop, Q to go back, S to simulate'
+            curr_gen = str(self.controller.curr_gen())
+            best_score = str(self.controller.best_GA_score())
+
+            stats_gen = f'Generation: {curr_gen}/{GA.generation}'
+            stats_score = f'Best score: {best_score}'
+            stats_hidden_node = f'Hidden nodes {Population.hidden_node}'
+
+            # draw stats
+            self.draw_text(
+                stats_gen, size=20,
+                x=3*CELL_SIZE, y=CELL_SIZE - 10,
+            )
+            self.draw_text(
+                stats_score, size=20,
+                x=3*CELL_SIZE, y=CELL_SIZE + 20,
+            )
+            self.draw_text(
+                stats_hidden_node, size=20,
+                x=self.SIZE / 2, y=CELL_SIZE - 30,
+                color=SNAKE_COLOR
+            )
 
         # instruction
         self.draw_text(
@@ -103,8 +146,8 @@ class GameGUI:
 
         # current Algo Title
         self.draw_text(
-            self.curr_menu.state, size=40,
-            x=self.SIZE/(2.5), y=CELL_SIZE +20,
+            self.curr_menu.state, size=30,
+            x=self.SIZE/2, y=CELL_SIZE -10,
         )
 
     def draw_all_snakes_GA(self):
@@ -133,14 +176,14 @@ class GameGUI:
 
     # Add this method to your GameGUI class
     def draw_explored(self):
-        radius = 4
         if self.view_explored and self.controller.algo is not None:
             for node in self.controller.algo.explored_set:
-                # Check if the node is inside the snake's body
-                if not self.controller.algo.inside_body(self.controller.snake, node):
-                    self.draw_circle(node, color=EXPLORED_COLOR, radius=radius, border=True)
+                x = int(node.x * CELL_SIZE)
+                y = int(node.y * CELL_SIZE)
 
-                
+                explored_rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
+                pygame.draw.rect(self.display, EXPLORED_COLOR, explored_rect, 1)
+
     def draw_snake_head(self, snake):
         head = snake.body[0]
         # self.draw_rect(head, color=SNAKE_HEAD_COLOR)
@@ -190,26 +233,30 @@ class GameGUI:
     def draw_banner(self):
         banner = pygame.Rect(0, 0, self.SIZE, BANNER_HEIGHT * CELL_SIZE)
         pygame.draw.rect(self.display, BANNER_COLOR, banner)
+         # Draw a button to show the form
+        # button_width = 120
+        # button_height = 40
+        # button_x = self.SIZE - button_width -600
+        # button_y = 20
+        # self.draw_button("instruction", button_x, button_y, button_width, button_height, action="show_form")
 
     def draw_score(self):
         score_text = 'Score: ' + str(self.controller.get_score())
-        score_x = self.SIZE - 700
-        score_y = CELL_SIZE  # Adjust the y-coordinate to separate from the score
+        score_x = self.SIZE - (CELL_SIZE + 2 * len(score_text))
+        score_y = CELL_SIZE - 10
         self.draw_text(score_text, 20, score_x, score_y, WINDOW_COLOR)
 
     def draw_steps(self):
         steps_text = 'Steps: ' + str(self.controller.get_steps())
-        steps_x = self.SIZE - 700
-        steps_y = CELL_SIZE +30 # Adjust the y-coordinate to separate from the score
-        self.draw_text(steps_text, 20, steps_x, steps_y, WINDOW_COLOR)
-
-
-    def draw_banner_text(self):        
-        steps_text = ' Nguyen Thanh Tinh\nHoang Huu Minh Phuc \nDinh Huu Quang Anh'
-        
-        steps_x = self.SIZE -150
+        steps_x = self.SIZE - (CELL_SIZE + 2 * len(steps_text))
         steps_y = CELL_SIZE + 20  # Adjust the y-coordinate to separate from the score
         self.draw_text(steps_text, 20, steps_x, steps_y, WINDOW_COLOR)
+
+
+    def draw_banner_text(self, text, size, color=WINDOW_COLOR):
+        x = self.SIZE // 2
+        y = BANNER_HEIGHT * CELL_SIZE // 2
+        self.draw_text(text, size, x, y, color)
 
 
     def game_over(self):
@@ -234,8 +281,19 @@ class GameGUI:
             self.display.fill(MENU_COLOR)
 
             # training model results
-            if  self.controller.model_loaded == False:
+            if self.curr_menu.state == 'GA' and self.controller.model_loaded == False:
+                best_score = self.controller.best_GA_score()
+                best_gen = self.controller.best_GA_gen()
 
+                high_score = f'Best snake Score: {best_score} in generation {best_gen}'
+                save = 'Press S to save best snake'
+
+                self.draw_text(
+                    save, size=30,
+                    x=self.SIZE/2, y=self.SIZE/2 + 3*CELL_SIZE,
+                    color=FRUIT_COLOR
+                )
+            else:
                 # Path ai or trained model results
                 high_score = f'High Score: {self.controller.get_score()}'
                 step_score = f'Step : {self.controller.get_steps()}'
@@ -268,6 +326,7 @@ class GameGUI:
     def event_handler(self):
         for event in pygame.event.get():
             if self.is_quit(event):
+                print('Bye :)')
                 pygame.quit()
                 sys.exit()
 

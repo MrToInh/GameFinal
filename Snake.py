@@ -1,6 +1,5 @@
 from pygame.math import Vector2
 from Fruit import Fruit
-from NN import NeuralNework
 import pickle
 
 
@@ -15,15 +14,6 @@ class Snake:
         self.life_time = 0
         self.steps = 0
         self.hidden = hidden
-        self.network = NeuralNework(5, self.hidden, 3)
-
-    def save_model(self, network, name):
-        with open(name, "wb") as file:
-            pickle.dump(network, file)
-
-    def load_model(self, name):
-        with open(name, 'rb') as file:
-            self.network = pickle.load(file)
 
     def reset(self):
         self.body = [Vector2(5, 8), Vector2(4, 8), Vector2(3, 8)]
@@ -32,8 +22,6 @@ class Snake:
         self.score = 0
         self.fitness = 0
         self.steps = 0
-
-        self.network = NeuralNework(5, self.hidden, 3)
 
     def get_x(self):
         return self.body[0].x

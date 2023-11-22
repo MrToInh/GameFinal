@@ -1,7 +1,7 @@
 # screen dimensions
 CELL_SIZE = 40
 NO_OF_CELLS = 20
-BANNER_HEIGHT = 2
+BANNER_HEIGHT = 3
 
 # button + text field dimensions
 BTN_WIDTH = 200
@@ -26,7 +26,8 @@ TXT_ACTIVE = (94, 219, 111)
 SNAKE_COLOR = (235, 235, 235)
 SNAKE_HEAD_COLOR = (106, 164, 189)
 FRUIT_COLOR = (219, 90, 101)   # A semi-transparent shade of green
-PATHCOLOR = (255, 99, 71)   # Change to your desired color (e.g., a semi-transparent shade of green)
+PATHCOLOR = (0, 0, 255, 50)  # A semi-transparent shade of blue
+   # Change to your desired color (e.g., a semi-transparent shade of green)
 EXPLORED_COLOR = (255, 0, 127, 50)   # A semi-transparent shade of green
 
 

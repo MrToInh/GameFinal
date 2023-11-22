@@ -5,7 +5,6 @@ from DFS import DFS
 from BFS import BFS
 from UCS import UCS
 from A_STAR import A_STAR
-from GA import *
 from Greedy import Greedy
 from BestFS import BestFirstSearch
 class GameController:
@@ -31,7 +30,6 @@ class GameController:
         self.model_loaded = False
 
     
-
     def get_score(self):
         if self.snake:
             return self.snake.score
@@ -61,22 +59,6 @@ class GameController:
             if inside_body == False:
                 break
 
-    def ate_fruit_GA(self, snake):
-        if snake.ate_fruit():
-            snake.add_body_ai()
-            self.change_fruit_location_GA(snake)
-
-    def change_fruit_location_GA(self, snake):
-        while True:
-            snake.create_fruit()
-            position = snake.get_fruit()
-            inside_body = False
-            for body in snake.body:
-                if position == body:
-                    inside_body = True
-
-            if inside_body == False:
-                break
 
     def died(self):
         current_x = self.snake.body[0].x
@@ -118,7 +100,7 @@ class GameController:
             self.snake = Snake()
 
         elif algo_type == 'BestFS':
-            self.algo = BestFS(self.grid)
+            self.algo = BestFirstSearch(self.grid)
             self.snake = Snake()
 
         
@@ -129,11 +111,8 @@ class GameController:
         if self.algo == None:
             return
 
-        if isinstance(self.algo, GA):
-            self.update_GA_ai()
-        else:
-            pos = self.algo.run_algorithm(self.snake)
-            self.update_path_finding_algo(pos)
+        pos = self.algo.run_algorithm(self.snake)
+        self.update_path_finding_algo(pos)
 
     def keep_moving(self):
         x = self.snake.body[0].x
