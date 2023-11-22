@@ -64,6 +64,7 @@ class Snake:
         self.body[0].x = x
         self.body[0].y = y
 
+
     def add_body_ai(self):
         last_indx = len(self.body) - 1
         tail = self.body[-1]

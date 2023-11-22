@@ -13,8 +13,8 @@ class GameGUI:
         self.clock = pygame.time.Clock()
         self.SCREEN_UPDATE = pygame.USEREVENT
 
-        self.speed = 110
-        self.speed_up = 80
+        self.speed = 50
+        self.speed_up = 70
 
         pygame.time.set_timer(self.SCREEN_UPDATE, self.speed)
 
@@ -66,6 +66,7 @@ class GameGUI:
             self.draw_fruit(fruit)
             self.draw_snake(snake)
             self.draw_score()
+            self.draw_steps()
 
             if not self.controller.model_loaded:
                 self.draw_path()  # only path Ai has a path
@@ -74,6 +75,24 @@ class GameGUI:
 
         else:  # training a GA model
             self.draw_all_snakes_GA()
+
+        # Add the following method to your GameGUI class
+    def draw_button(self, text, x, y, width, height, action=None):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+
+        if x + width > mouse[0] > x and y + height > mouse[1] > y:
+            pygame.draw.rect(self.display, BTN_COLOR, (x, y, width, height))
+
+            if click[0] == 1 and action is not None:
+                if action == "show_form":
+                    # Add code here to show your form
+                    pass
+        else:
+            pygame.draw.rect(self.display, BTN_COLOR, (x, y, width, height))
+
+        self.draw_text(text, 20, x + width / 2, y + height / 2, color=WINDOW_COLOR)
+
 
     # Modify the draw_grid method
     def draw_grid(self):
@@ -87,23 +106,15 @@ class GameGUI:
 
                 pygame.draw.rect(self.display, current_color, (x, y, CELL_SIZE, CELL_SIZE))
 
-        # # Additional grid lines (optional)
-        # for x in range(0, self.SIZE, CELL_SIZE):
-        #     pygame.draw.line(self.display, (0, 0, 0), (x, 0), (x, self.SIZE))
-        # for y in range(0, self.SIZE, CELL_SIZE):
-        #     pygame.draw.line(self.display, (0, 0, 0), (0, y), (self.SIZE, y))
-
-
-
     def draw_game_stats(self):
         if self.curr_menu.state != 'GA':  # path Ai algo
-            instruction = 'Space to view Ai path, W to speed up, Q to go back'
+            instruction = 'Space to view Ai path, W to stop, Q to go back'
 
         elif self.controller.model_loaded:  # trained model
             instruction = 'W to speed up, Q to go back'
 
         else:  # training model GA algo
-            instruction = 'Space to hide all snakes, W to speed up, Q to go back'
+            instruction = 'Space to hide all snakes, W to stop, Q to go back, S to simulate'
             curr_gen = str(self.controller.curr_gen())
             best_score = str(self.controller.best_GA_score())
 
@@ -206,12 +217,31 @@ class GameGUI:
     def draw_banner(self):
         banner = pygame.Rect(0, 0, self.SIZE, BANNER_HEIGHT * CELL_SIZE)
         pygame.draw.rect(self.display, BANNER_COLOR, banner)
+         # Draw a button to show the form
+        button_width = 120
+        button_height = 40
+        button_x = self.SIZE - button_width -600
+        button_y = 10
+        self.draw_button("INTRUCTION", button_x, button_y, button_width, button_height, action="show_form")
 
     def draw_score(self):
         score_text = 'Score: ' + str(self.controller.get_score())
-        score_x = self.SIZE - (CELL_SIZE + 2*len(score_text))
-        score_y = CELL_SIZE
+        score_x = self.SIZE - (CELL_SIZE + 2 * len(score_text))
+        score_y = CELL_SIZE - 10
         self.draw_text(score_text, 20, score_x, score_y, WINDOW_COLOR)
+
+    def draw_steps(self):
+        steps_text = 'Steps: ' + str(self.controller.get_steps())
+        steps_x = self.SIZE - (CELL_SIZE + 2 * len(steps_text))
+        steps_y = CELL_SIZE + 20  # Adjust the y-coordinate to separate from the score
+        self.draw_text(steps_text, 20, steps_x, steps_y, WINDOW_COLOR)
+
+
+    def draw_banner_text(self, text, size, color=WINDOW_COLOR):
+        x = self.SIZE // 2
+        y = BANNER_HEIGHT * CELL_SIZE // 2
+        self.draw_text(text, size, x, y, color)
+
 
     def game_over(self):
         again = False
@@ -250,6 +280,7 @@ class GameGUI:
             else:
                 # Path ai or trained model results
                 high_score = f'High Score: {self.controller.get_score()}'
+                step_score = f'Step Score: {self.controller.get_steps()}'
 
             to_continue = 'Enter to Continue'
 

@@ -14,6 +14,7 @@ class GameController:
         self.snake = None
         self.snakes = []
         self.score = 0
+        self.steps = 0
         self.end = False
         self.grid = Grid().grid
         self.algo = None
@@ -34,6 +35,12 @@ class GameController:
     def get_score(self):
         if self.snake:
             return self.snake.score
+        else:
+            return 0
+
+    def get_steps(self):
+        if self.snake:
+            return self.snake.steps
         else:
             return 0
 
@@ -111,7 +118,7 @@ class GameController:
             self.snake = Snake()
 
         elif algo_type == 'BestFS':
-            self.algo = BestFirstSearch(self.grid)
+            self.algo = BestFS(self.grid)
             self.snake = Snake()
 
         

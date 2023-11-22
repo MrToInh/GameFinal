@@ -26,6 +26,7 @@ TXT_ACTIVE = (94, 219, 111)
 SNAKE_COLOR = (235, 235, 235)
 SNAKE_HEAD_COLOR = (106, 164, 189)
 FRUIT_COLOR = (219, 90, 101)   # A semi-transparent shade of green
+PATHCOLOR = (255, 99, 71)   # Change to your desired color (e.g., a semi-transparent shade of green)
 EXPLORED_COLOR = (255, 0, 127, 50)   # A semi-transparent shade of green
 
 
@@ -36,26 +37,4 @@ MENU_COLOR = (94, 219, 111)
 BANNER_COLOR = (189, 189, 189)
 TITLE_COLOR = (133, 209, 242)
 
-# # COLORS
-# # 1) buttons
-# BTN_COLOR = (118, 131, 163)
-# BTN_HOVER = (94, 219, 111)
-# BTN_CLICKED = (94, 219, 111)
 
-# # 2) text field
-# TXT_PASSIVE = (162, 163, 163)
-# TXT_ACTIVE = (94, 219, 111)
-
-# # # 3) snake + path + fruit
-# SNAKE_COLOR = (235, 235, 235)
-# SNAKE_HEAD_COLOR = (22, 72, 99)   # Change to your desired color (e.g., a shade of green)
-# FRUIT_COLOR = (255, 0, 102)      # Change to your desired color (e.g., a shade of pink)
-PATHCOLOR = (255, 99, 71)   # Change to your desired color (e.g., a semi-transparent shade of green)
-# EXPLOREDCOLOR = (255, 0, 127, 50)   # Change to your desired color (e.g., a semi-transparent shade of green)
-
-# # 4) related to screen
-# WINDOW_COLOR = (40, 40, 41)
-# WHITE = (241, 241, 241)
-# MENU_COLOR = (94, 219, 111)
-# BANNER_COLOR = (189, 189, 189)
-# TITLE_COLOR = (133, 209, 242)
