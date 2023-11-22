@@ -4,7 +4,7 @@ from Menu import *
 from GameController import GameController
 from GA import *
 import sys
-
+import tkinter as tk
 
 class GameGUI:
     def __init__(self):
@@ -13,7 +13,7 @@ class GameGUI:
         self.clock = pygame.time.Clock()
         self.SCREEN_UPDATE = pygame.USEREVENT
 
-        self.speed = 50
+        self.speed = 60
         self.speed_up = 70
 
         pygame.time.set_timer(self.SCREEN_UPDATE, self.speed)
@@ -76,22 +76,22 @@ class GameGUI:
         else:  # training a GA model
             self.draw_all_snakes_GA()
 
-        # Add the following method to your GameGUI class
-    def draw_button(self, text, x, y, width, height, action=None):
-        mouse = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
+ 
 
-        if x + width > mouse[0] > x and y + height > mouse[1] > y:
-            pygame.draw.rect(self.display, BTN_COLOR, (x, y, width, height))
+    # def draw_button(self, text, x, y, width, height, action=None):
+    #     mouse = pygame.mouse.get_pos()
+    #     click = pygame.mouse.get_pressed()
 
-            if click[0] == 1 and action is not None:
-                if action == "show_form":
-                    # Add code here to show your form
-                    pass
-        else:
-            pygame.draw.rect(self.display, BTN_COLOR, (x, y, width, height))
+    #     if x + width > mouse[0] > x and y + height > mouse[1] > y:
+    #         pygame.draw.rect(self.display, BTN_COLOR, (x, y, width, height))
 
-        self.draw_text(text, 20, x + width / 2, y + height / 2, color=WINDOW_COLOR)
+    #         if click[0] == 1 and action is not None:
+    #             if action == "show_form":
+    #                 self.show_instruction_form()
+    #     else:
+    #         pygame.draw.rect(self.display, BTN_COLOR, (x, y, width, height))
+
+    #     self.draw_text(text, 20, x + width / 2, y + height / 2, color=WINDOW_COLOR)
 
 
     # Modify the draw_grid method
@@ -108,7 +108,7 @@ class GameGUI:
 
     def draw_game_stats(self):
         if self.curr_menu.state != 'GA':  # path Ai algo
-            instruction = 'Space to view Ai path, W to stop, Q to go back'
+            instruction = 'Space to view Ai path, W to stop, S to simulate,  Q to go back'
 
         elif self.controller.model_loaded:  # trained model
             instruction = 'W to speed up, Q to go back'
@@ -139,15 +139,15 @@ class GameGUI:
 
         # instruction
         self.draw_text(
-            instruction, size=20,
-            x=self.SIZE/2, y=(CELL_SIZE * NO_OF_CELLS) - NO_OF_CELLS,
-            color=WHITE
+            instruction, size=23,
+            x=self.SIZE/2, y=(CELL_SIZE * NO_OF_CELLS) - NO_OF_CELLS*2,
+            color= BLUE
         )
 
         # current Algo Title
         self.draw_text(
             self.curr_menu.state, size=30,
-            x=self.SIZE/2, y=CELL_SIZE,
+            x=self.SIZE/2, y=CELL_SIZE -10,
         )
 
     def draw_all_snakes_GA(self):
@@ -218,11 +218,11 @@ class GameGUI:
         banner = pygame.Rect(0, 0, self.SIZE, BANNER_HEIGHT * CELL_SIZE)
         pygame.draw.rect(self.display, BANNER_COLOR, banner)
          # Draw a button to show the form
-        button_width = 120
-        button_height = 40
-        button_x = self.SIZE - button_width -600
-        button_y = 10
-        self.draw_button("INTRUCTION", button_x, button_y, button_width, button_height, action="show_form")
+        # button_width = 120
+        # button_height = 40
+        # button_x = self.SIZE - button_width -600
+        # button_y = 20
+        # self.draw_button("instruction", button_x, button_y, button_width, button_height, action="show_form")
 
     def draw_score(self):
         score_text = 'Score: ' + str(self.controller.get_score())
@@ -280,7 +280,7 @@ class GameGUI:
             else:
                 # Path ai or trained model results
                 high_score = f'High Score: {self.controller.get_score()}'
-                step_score = f'Step Score: {self.controller.get_steps()}'
+                step_score = f'Step : {self.controller.get_steps()}'
 
             to_continue = 'Enter to Continue'
 

@@ -33,6 +33,7 @@ EXPLORED_COLOR = (255, 0, 127, 50)   # A semi-transparent shade of green
 # 4) related to screen
 WINDOW_COLOR = (40, 40, 41)
 WHITE = (241, 241, 241)
+BLUE =(22, 72, 99)
 MENU_COLOR = (94, 219, 111)
 BANNER_COLOR = (189, 189, 189)
 TITLE_COLOR = (133, 209, 242)
