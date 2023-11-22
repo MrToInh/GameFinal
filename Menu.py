@@ -80,11 +80,13 @@ class MainMenu(Menu):
     def display_menu(self):
         self.run_display = True
 
+        bg_image = pygame.image.load('images/wp3906251.jpg')
+
         while self.run_display:
             self.game.event_handler()
             self.check_input()
 
-            self.game.display.fill(WINDOW_COLOR)
+            self.game.display.blit(bg_image, (0, 0))
 
             self.game.draw_text(
                 'Ai Snake Game', size=self.title_size,

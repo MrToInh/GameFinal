@@ -283,6 +283,12 @@ class GameGUI:
                 step_score = f'Step : {self.controller.get_steps()}'
 
             to_continue = 'Enter to Continue'
+            over= 'GAME OVER'
+
+            self.draw_text(
+                over, size=50,
+                x=self.SIZE/2, y=self.SIZE/3,
+            )
 
             self.draw_text(
                 high_score, size=35,
