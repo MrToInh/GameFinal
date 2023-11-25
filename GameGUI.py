@@ -58,6 +58,7 @@ class GameGUI:
         self.draw_banner()
         self.draw_game_stats()
         self.draw_banner_text()
+        self.draw_obstacles()  # Draw obstacles
 
         if self.curr_menu.state != 'GA' or self.controller.model_loaded:  # Path Ai or trained GA
             fruit = self.controller.get_fruit_pos()
@@ -78,18 +79,7 @@ class GameGUI:
 
 
 
-    # Modify the draw_grid method
-    def draw_grid(self):
-        color1 = (170, 203, 115)  
-        color2 = (205, 233, 144)  # Lime green
-
-        for x in range(0, self.SIZE, CELL_SIZE):
-            for y in range(0, self.SIZE, CELL_SIZE):
-                # Determine the color based on the position
-                current_color = color1 if (x // CELL_SIZE + y // CELL_SIZE) % 2 == 0 else color2
-
-                pygame.draw.rect(self.display, current_color, (x, y, CELL_SIZE, CELL_SIZE))
-
+    
     def draw_game_stats(self):
         if self.curr_menu.state != '':  # path Ai algo
             instruction = 'Space to view Ai path, W to stop, S to simulate,  Q to go back'
@@ -106,15 +96,6 @@ class GameGUI:
             self.curr_menu.state, size=40,
             x=self.SIZE/(2.5), y=CELL_SIZE +20,
         )
-
-    def draw_all_snakes_GA(self):
-        if not self.view_path:  # have all snakes visible by default
-
-            for snake in self.controller.snakes:  # for each snake in list
-                self.draw_snake(snake)
-
-                # fruit of each snake
-                self.draw_fruit(snake.get_fruit())
 
     def draw_path(self):
         if self.controller.algo != None and self.view_path:
@@ -134,16 +115,15 @@ class GameGUI:
     # Add this method to your GameGUI class
     def draw_explored(self):
         radius = 4
-        if self.view_explored and self.controller.algo is not None:
+        if self.view_explored and self.controller.algo is not None :
             for node in self.controller.algo.explored_set:
                 # Check if the node is inside the snake's body
-                if not self.controller.algo.inside_body(self.controller.snake, node):
+                if not self.controller.algo.inside_body(self.controller.snake, node) :
                     self.draw_circle(node, color=EXPLORED_COLOR, radius=radius, border=True)
 
                 
     def draw_snake_head(self, snake):
         head = snake.body[0]
-        # self.draw_rect(head, color=SNAKE_HEAD_COLOR)
         radius=20
         self.draw_circle(head, color=SNAKE_HEAD_COLOR, radius=radius, border=True)
 
@@ -308,6 +288,14 @@ class GameGUI:
                     self.speed = self.speed + self.speed_up
                     pygame.time.set_timer(self.SCREEN_UPDATE, self.speed)
 
+                # elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                #     x, y = pygame.mouse.get_pos()
+                #     i, j = x // CELL_SIZE, y // CELL_SIZE
+
+                #     # Toggle obstacle status when clicking on a cell
+                #     cell = self.controller.grid[i][j]
+                #     cell.is_obstacle = not cell.is_obstacle
+
     def reset_keys(self):
         self.UPKEY, self.DOWNKEY, self.START, self.BACK = False, False, False, False
 
@@ -317,3 +305,32 @@ class GameGUI:
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)
         self.display.blit(text_surface, text_rect)
+
+    # Add a new method to draw obstacles
+    def draw_obstacles(self):
+        for i in range(NO_OF_CELLS):
+            for j in range(NO_OF_CELLS):
+                current_node = self.controller.grid[i][j]
+
+                if current_node.is_obstacle:
+                    x = int(current_node.x * CELL_SIZE)
+                    y = int(current_node.y * CELL_SIZE)
+                    obstacle_rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
+                    pygame.draw.rect(self.display, OBSTACLE_COLOR, obstacle_rect)
+                    pygame.draw.rect(self.display, WINDOW_COLOR, obstacle_rect, 1)
+
+    # Modify the draw_grid method
+    def draw_grid(self):
+        color1 = (170, 203, 115)  
+        color2 = (205, 233, 144)  # Lime green
+
+        for i in range(NO_OF_CELLS):
+            for j in range(NO_OF_CELLS):
+                current_color = color1 if (i + j) % 2 == 0 else color2
+                current_node = self.controller.grid[i][j]
+
+                if current_node.is_obstacle:
+                    pygame.draw.rect(self.display, OBSTACLE_COLOR, (i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                else:
+                    pygame.draw.rect(self.display, current_color, (i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                    pygame.draw.rect(self.display, WINDOW_COLOR, (i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)

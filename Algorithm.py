@@ -12,6 +12,7 @@ class Algorithm(ABC):
         self.explored_set = []
         self.path = []
 
+
     def get_initstate_and_goalstate(self, snake):
         return Node(snake.get_x(), snake.get_y()), Node(snake.get_fruit().x, snake.get_fruit().y)
 
@@ -57,17 +58,16 @@ class Algorithm(ABC):
 
         neighbors = []
         # left [i-1, j]
-        if i > 0:
+        if i > 0 and not self.grid[i-1][j].is_obstacle:
             neighbors.append(self.grid[i-1][j])
         # right [i+1, j]
-        if i < NO_OF_CELLS - 1:
+        if i < NO_OF_CELLS - 1 and not self.grid[i+1][j].is_obstacle:
             neighbors.append(self.grid[i+1][j])
         # top [i, j-1]
-        if j > 0:
+        if j > 0 and not self.grid[i][j-1].is_obstacle:
             neighbors.append(self.grid[i][j-1])
-
         # bottom [i, j+1]
-        if j < NO_OF_CELLS - 1:
+        if j < NO_OF_CELLS - 1 and not self.grid[i][j+1].is_obstacle:
             neighbors.append(self.grid[i][j+1])
 
         return neighbors

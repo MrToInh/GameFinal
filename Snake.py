@@ -1,6 +1,7 @@
 from pygame.math import Vector2
 from Fruit import Fruit
 import pickle
+from Algorithm import Algorithm
 
 
 class Snake:
