@@ -12,7 +12,7 @@ class GameGUI:
         self.clock = pygame.time.Clock()
         self.SCREEN_UPDATE = pygame.USEREVENT
 
-        self.speed = 90
+        self.speed = 10
         self.speed_up = 100
 
         pygame.time.set_timer(self.SCREEN_UPDATE, self.speed)
@@ -172,7 +172,7 @@ class GameGUI:
         pygame.draw.rect(self.display, BANNER_COLOR, banner)
 
     def draw_score(self):
-        score_text = 'Score: ' + str(self.controller.get_score())
+        score_text = 'Scores: ' + str(self.controller.get_score())
         score_x = self.SIZE - 700
         score_y = CELL_SIZE  # Adjust the y-coordinate to separate from the score
         self.draw_text(score_text, 20, score_x, score_y, WINDOW_COLOR)
@@ -226,6 +226,11 @@ class GameGUI:
                 high_score, size=35,
                 x=self.SIZE/2, y=self.SIZE/2,
             )
+            self.draw_text(
+                step_score, size=35,
+                x=self.SIZE/2, y=self.SIZE/2+20,
+            )
+
 
             self.draw_text(
                 to_continue, size=30,

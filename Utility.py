@@ -29,12 +29,17 @@ class Grid:
             for j in range(NO_OF_CELLS):
                 col.append(Node(i, j))
             self.grid.append(col)
-        #  # Mark certain nodes as obstacles
-        # self.grid[1][1].is_obstacle = True
-        # self.grid[2][2].is_obstacle = True
-        # Add more obstacle nodes as needed
 
-        for j in range(15,int(NO_OF_CELLS-2)):
-            self.grid[3][j].is_obstacle = True
-        for i in range(3,6):
-            self.grid[i][5].is_obstacle = True
+        for i in range(13, 15):
+            self.grid[i][15].is_obstacle = True
+
+        for j in range(10, 12):
+            self.grid[12][j].is_obstacle = True
+
+
+        self.grid[6][6].is_obstacle = True
+        self.grid[7][6].is_obstacle = True
+        self.grid[8][6].is_obstacle = True
+
+
+

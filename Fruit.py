@@ -20,3 +20,7 @@ class Fruit:
     def reset_seed(self):
         random.seed(USER_SEED)
         self.generate_fruit()
+
+    # def write_position_to_file(self, filename):
+    #     with open(filename, 'w') as file:
+    #         file.write(f"Fruit position: ({self.position.x}, {self.position.y})\n")

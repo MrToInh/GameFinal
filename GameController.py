@@ -164,3 +164,10 @@ class GameController:
         self.snake.move_ai(x, y)
         self.died()
         self.ate_fruit()
+
+        all_fruit_positions = self.get_all_fruit_positions()
+        print("Fruit Positions:", all_fruit_positions)
+
+    def get_all_fruit_positions(self):
+        if self.snake:
+            return [self.snake.get_fruit()]
